@@ -1,36 +1,26 @@
+# app/schemas.py
 from pydantic import BaseModel, EmailStr
 from typing import Optional
-import datetime
 
-class PersonCreate(BaseModel):
+class PersonRead(BaseModel):
+    id: int
     name: str
     email: EmailStr
 
-class PersonRead(PersonCreate):
-    id: int
     class Config:
-        orm_mode = True
+        # for Pydantic v2 use from_attributes instead of orm_mode
+        orm_mode = True  
+        # if you’re on pydantic v2, rename the line above to:
+        # from_attributes = True
 
-class ProjectCreate(BaseModel):
+class ProjectRead(BaseModel):
+    id: int
     title: str
     description: Optional[str] = None
-    owner_id: int
+    product_owner_id: int
+    product_owner: PersonRead
 
-class ProjectRead(ProjectCreate):
-    id: int
-    owner: PersonRead
     class Config:
-        orm_mode = True
-
-class TaskCreate(BaseModel):
-    title: str
-    due: Optional[datetime.datetime] = None
-    owner_id: int
-    project_id: int
-
-class TaskRead(TaskCreate):
-    id: int
-    owner: PersonRead
-    project: ProjectRead
-    class Config:
-        orm_mode = True
+        orm_mode = True  
+        # or for v2:
+        # from_attributes = True
